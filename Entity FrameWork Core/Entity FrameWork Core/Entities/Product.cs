@@ -20,6 +20,7 @@ namespace Entity_FrameWork_Core.Entities
         public int ProductListId { get; set; }
 
         public ProductList ProductList { get; set; }
+
         public Sale Sale { get; set; }
 
         public Order Order { get; set; }

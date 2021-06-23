@@ -13,7 +13,7 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -40,7 +40,7 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     ProductListId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     InventoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -55,20 +55,20 @@ namespace Entity_FrameWork_Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Customer",
                 columns: table => new
                 {
                     CustomerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     OrderHistoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.CustomerID);
+                    table.PrimaryKey("PK_Customer", x => x.CustomerID);
                     table.ForeignKey(
-                        name: "FK_Customers_OrderHistories_OrderHistoryId",
+                        name: "FK_Customer_OrderHistories_OrderHistoryId",
                         column: x => x.OrderHistoryId,
                         principalTable: "OrderHistories",
                         principalColumn: "OrderHistoryId",
@@ -76,7 +76,7 @@ namespace Entity_FrameWork_Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "Order",
                 columns: table => new
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
@@ -86,11 +86,11 @@ namespace Entity_FrameWork_Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.PrimaryKey("PK_Order", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerId",
+                        name: "FK_Order_Customer_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        principalTable: "Customer",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -101,9 +101,9 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     DateSold = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ProductListId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -111,9 +111,9 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
                     table.ForeignKey(
-                        name: "FK_Products_Orders_OrderId",
+                        name: "FK_Products_Order_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -147,14 +147,14 @@ namespace Entity_FrameWork_Core.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customers_OrderHistoryId",
-                table: "Customers",
+                name: "IX_Customer_OrderHistoryId",
+                table: "Customer",
                 column: "OrderHistoryId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
-                table: "Orders",
+                name: "IX_Order_CustomerId",
+                table: "Order",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
@@ -188,13 +188,13 @@ namespace Entity_FrameWork_Core.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Order");
 
             migrationBuilder.DropTable(
                 name: "ProductLists");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Customer");
 
             migrationBuilder.DropTable(
                 name: "Inventories");

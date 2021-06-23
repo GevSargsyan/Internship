@@ -27,10 +27,12 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("OrderHistoryId")
                         .HasColumnType("int");
@@ -40,7 +42,7 @@ namespace Entity_FrameWork_Core.Migrations
                     b.HasIndex("OrderHistoryId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Inventory", b =>
@@ -51,7 +53,8 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -78,7 +81,7 @@ namespace Entity_FrameWork_Core.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.OrderHistory", b =>
@@ -107,7 +110,8 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
@@ -116,7 +120,8 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("ProductId");
 
@@ -138,7 +143,8 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("ProductListId");
 
