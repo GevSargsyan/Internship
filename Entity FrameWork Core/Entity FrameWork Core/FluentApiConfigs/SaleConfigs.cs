@@ -20,7 +20,8 @@ namespace Entity_FrameWork_Core.FluentApiConfigs
 
 
             builder.HasOne(s => s.Product)
-                   .WithOne(p => p.Sale);
+                   .WithOne(p => p.Sale)
+                   .HasForeignKey<Sale>(s => s.SaleId);
 
       
 

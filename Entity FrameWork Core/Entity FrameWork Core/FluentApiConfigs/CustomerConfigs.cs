@@ -22,7 +22,8 @@ namespace Entity_FrameWork_Core.FluentApiConfigs
                 .WithOne(o => o.Customer);
 
             builder.HasOne(c => c.OrderHistory)
-                .WithOne(o => o.Customer);
+                .WithOne(o => o.Customer)
+                .HasForeignKey<OrderHistory>(c => c.OrderHistoryId);
                 
 
 

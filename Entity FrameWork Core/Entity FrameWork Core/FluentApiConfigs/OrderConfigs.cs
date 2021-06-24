@@ -21,6 +21,9 @@ namespace Entity_FrameWork_Core.FluentApiConfigs
             builder.HasMany(o => o.Products)
                 .WithOne(p => p.Order);
 
+            builder.HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(c => c.CustomerId);
         }
     }
 
