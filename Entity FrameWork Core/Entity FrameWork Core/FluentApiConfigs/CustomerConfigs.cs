@@ -17,6 +17,7 @@ namespace Entity_FrameWork_Core.FluentApiConfigs
 
             builder.Property(c => c.Name).HasMaxLength(20);
             builder.Property(c => c.Address).HasMaxLength(20);
+        
 
             builder.HasMany(c => c.Orders)
                 .WithOne(o => o.Customer);

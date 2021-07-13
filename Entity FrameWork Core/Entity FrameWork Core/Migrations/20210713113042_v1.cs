@@ -3,57 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Entity_FrameWork_Core.Migrations
 {
-    public partial class init : Migration
+    public partial class v1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Inventories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inventories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderHistories",
-                columns: table => new
-                {
-                    OrderHistoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderHistories", x => x.OrderHistoryId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductLists",
-                columns: table => new
-                {
-                    ProductListId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
-                    InventoryId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductLists", x => x.ProductListId);
-                    table.ForeignKey(
-                        name: "FK_ProductLists_Inventories_InventoryId",
-                        column: x => x.InventoryId,
-                        principalTable: "Inventories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Customer",
                 columns: table => new
@@ -67,12 +20,20 @@ namespace Entity_FrameWork_Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customer", x => x.CustomerID);
-                    table.ForeignKey(
-                        name: "FK_Customer_OrderHistories_OrderHistoryId",
-                        column: x => x.OrderHistoryId,
-                        principalTable: "OrderHistories",
-                        principalColumn: "OrderHistoryId",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inventories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,6 +53,44 @@ namespace Entity_FrameWork_Core.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customer",
                         principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderHistories",
+                columns: table => new
+                {
+                    OrderHistoryId = table.Column<int>(type: "int", nullable: false),
+                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderHistories", x => x.OrderHistoryId);
+                    table.ForeignKey(
+                        name: "FK_OrderHistories_Customer_OrderHistoryId",
+                        column: x => x.OrderHistoryId,
+                        principalTable: "Customer",
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductLists",
+                columns: table => new
+                {
+                    ProductListId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    InventoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductLists", x => x.ProductListId);
+                    table.ForeignKey(
+                        name: "FK_ProductLists_Inventories_InventoryId",
+                        column: x => x.InventoryId,
+                        principalTable: "Inventories",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -128,8 +127,7 @@ namespace Entity_FrameWork_Core.Migrations
                 name: "Sales",
                 columns: table => new
                 {
-                    SaleId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SaleId = table.Column<int>(type: "int", nullable: false),
                     DateSold = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     AmountSold = table.Column<int>(type: "int", nullable: false),
@@ -139,18 +137,12 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     table.PrimaryKey("PK_Sales", x => x.SaleId);
                     table.ForeignKey(
-                        name: "FK_Sales_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_Sales_Products_SaleId",
+                        column: x => x.SaleId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customer_OrderHistoryId",
-                table: "Customer",
-                column: "OrderHistoryId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_CustomerId",
@@ -171,16 +163,13 @@ namespace Entity_FrameWork_Core.Migrations
                 name: "IX_Products_ProductListId",
                 table: "Products",
                 column: "ProductListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sales_ProductId",
-                table: "Sales",
-                column: "ProductId",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "OrderHistories");
+
             migrationBuilder.DropTable(
                 name: "Sales");
 
@@ -198,9 +187,6 @@ namespace Entity_FrameWork_Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inventories");
-
-            migrationBuilder.DropTable(
-                name: "OrderHistories");
         }
     }
 }

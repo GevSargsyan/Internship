@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity_FrameWork_Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210623221154_init")]
-    partial class init
+    [Migration("20210713113042_v1")]
+    partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,9 +40,6 @@ namespace Entity_FrameWork_Core.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CustomerID");
-
-                    b.HasIndex("OrderHistoryId")
-                        .IsUnique();
 
                     b.ToTable("Customer");
                 });
@@ -89,9 +86,7 @@ namespace Entity_FrameWork_Core.Migrations
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.OrderHistory", b =>
                 {
                     b.Property<int>("OrderHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("datetime2");
@@ -158,9 +153,7 @@ namespace Entity_FrameWork_Core.Migrations
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Sale", b =>
                 {
                     b.Property<int>("SaleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("AmountSold")
                         .HasColumnType("int");
@@ -176,21 +169,7 @@ namespace Entity_FrameWork_Core.Migrations
 
                     b.HasKey("SaleId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
-
                     b.ToTable("Sales");
-                });
-
-            modelBuilder.Entity("Entity_FrameWork_Core.Entities.Customer", b =>
-                {
-                    b.HasOne("Entity_FrameWork_Core.Entities.OrderHistory", "OrderHistory")
-                        .WithOne("Customer")
-                        .HasForeignKey("Entity_FrameWork_Core.Entities.Customer", "OrderHistoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrderHistory");
                 });
 
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Order", b =>
@@ -198,6 +177,17 @@ namespace Entity_FrameWork_Core.Migrations
                     b.HasOne("Entity_FrameWork_Core.Entities.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Entity_FrameWork_Core.Entities.OrderHistory", b =>
+                {
+                    b.HasOne("Entity_FrameWork_Core.Entities.Customer", "Customer")
+                        .WithOne("OrderHistory")
+                        .HasForeignKey("Entity_FrameWork_Core.Entities.OrderHistory", "OrderHistoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -236,7 +226,7 @@ namespace Entity_FrameWork_Core.Migrations
                 {
                     b.HasOne("Entity_FrameWork_Core.Entities.Product", "Product")
                         .WithOne("Sale")
-                        .HasForeignKey("Entity_FrameWork_Core.Entities.Sale", "ProductId")
+                        .HasForeignKey("Entity_FrameWork_Core.Entities.Sale", "SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -245,6 +235,8 @@ namespace Entity_FrameWork_Core.Migrations
 
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Customer", b =>
                 {
+                    b.Navigation("OrderHistory");
+
                     b.Navigation("Orders");
                 });
 
@@ -256,11 +248,6 @@ namespace Entity_FrameWork_Core.Migrations
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Order", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Entity_FrameWork_Core.Entities.OrderHistory", b =>
-                {
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Entity_FrameWork_Core.Entities.Product", b =>
