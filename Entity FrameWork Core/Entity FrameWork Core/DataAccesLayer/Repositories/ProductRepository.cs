@@ -22,6 +22,7 @@ namespace Entity_FrameWork_Core.DataAccesLayer.Repositories
             var product = await _db.Products.FindAsync(id);
             if (product == null) { throw new Exception("Not Found"); }
             return product;
+
         }
 
         public async Task<List<Product>> GetProductAsync()
