@@ -1,3 +1,8 @@
+using Entity_FrameWork_Core.BusinessLogicLayer.Interfaces;
+using Entity_FrameWork_Core.BusinessLogicLayer.Services;
+using Entity_FrameWork_Core.DataAccesLayer.Interfaces;
+using Entity_FrameWork_Core.DataAccesLayer.Repositories;
+using Entity_FrameWork_Core.DataAccesLayer.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +37,11 @@ namespace Entity_FrameWork_Core
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Entity_FrameWork_Core", Version = "v1" });
             });
+            services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+            services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(ICustomerService), typeof(CustomerService));
+            services.AddScoped(typeof(IProductService), typeof(ProductService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

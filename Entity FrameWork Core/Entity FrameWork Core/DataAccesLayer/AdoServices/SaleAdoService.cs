@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity_FrameWork_Core.DataAccesLayer
+namespace Entity_FrameWork_Core.DataAccesLayer.AdoServices
 {
     public class SaleAdoService
     {

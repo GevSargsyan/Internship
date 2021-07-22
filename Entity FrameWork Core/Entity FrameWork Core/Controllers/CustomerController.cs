@@ -1,4 +1,5 @@
-﻿using Entity_FrameWork_Core.Entities;
+﻿using Entity_FrameWork_Core.DataAccesLayer.Interfaces;
+using Entity_FrameWork_Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,38 +11,30 @@ using System.Threading.Tasks;
 namespace Entity_FrameWork_Core.Controllers
 {
 
-   public class Cust
-    {
-        public string Name { get; set; }
-        public string Address { get; set; }
-
-        public int OrderHistoryId { get; set; }
-
-    }
+ 
 
     [ApiController]
     [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        public CustomerController()
+        private ICustomerRepository _customerRepository;
+        public CustomerController(ICustomerRepository customerRepository)
         {
-            _db = new AppDbContext();
+             _customerRepository = customerRepository;
+           
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Customer>>> GetCustomersAsync()
         {
-            return await _db.Customers.ToListAsync();
-
-
+           return await _customerRepository.GetCustomersAsync();
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomerIdAsync([FromRoute] int id)
         {
-            var customer = await _db.Customers.FirstOrDefaultAsync(x => x.CustomerID == id);
+            var customer = await _customerRepository.GetCustomerByIdAsync(id);
             if (customer != null) return customer;
             return NotFound();
 
@@ -49,12 +42,11 @@ namespace Entity_FrameWork_Core.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Customer>> AddCustomerAsync([FromBody] Cust cust)
+        public async Task<ActionResult<Customer>> AddCustomerAsync([FromBody] Customer cust)
         {
             if (cust!=null)
             {
-                await _db.Customers.AddAsync(new Customer { Name = cust.Name, Address = cust.Address, OrderHistoryId = cust.OrderHistoryId });
-                await _db.SaveChangesAsync();
+               await _customerRepository.CreateCustomerAsync(cust);
                 return Ok(cust);
 
             }
@@ -66,31 +58,16 @@ namespace Entity_FrameWork_Core.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Customer>> DeleteCustomerAsync([FromRoute] int id)
         {
-            var customer = await _db.Customers.FirstOrDefaultAsync(x => x.CustomerID == id);
-            if (customer!=null)
-            {
-                _db.Customers.Remove(customer);
-                await _db.SaveChangesAsync();
-                return Ok(customer);
-            }
-            return NotFound();
-
+             await _customerRepository.DeleteCustomer(id);
+            return Ok();
+            
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Customer>> Put([FromRoute] int id,[FromBody] Cust cust)
+        public async Task<ActionResult<Customer>> UpdateCustomerAsync([FromRoute] int id,[FromBody] Customer customer)
         {
 
-            var customer =await _db.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            customer.Name = cust.Name;
-            customer.Address = cust.Address;
-            customer.OrderHistoryId = cust.OrderHistoryId;
-            _db.Update(customer);
-            await _db.SaveChangesAsync();
+            await _customerRepository.UpdateCustomer(id, customer);
             return Ok(customer);
         }
 
